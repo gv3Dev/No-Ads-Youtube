@@ -2,7 +2,7 @@
 // @name         No ADS - YouTube
 // @namespace    http://tampermonkey.net/
 // @version      3.2
-// @description  - Skips all YouTube ads - | - undetectable - | - skips ads instantly - | - adds volume control slider -
+// @description  - Skips all YouTube ads - | - undetectable - | - skips ads instantly - 
 // @author       gv3dev
 // @match        https://*.youtube.com/*
 // @icon         https://i.ibb.co/X5f50Cg/Screen-Shot-2021-07-19-at-9-31-54-PM.png
@@ -30,60 +30,6 @@ const manip = (actions) => {
         });
     });
 };
-
-const createVolumeSlider = (video) => {
-    const sliderContainer = document.createElement('div');
-    sliderContainer.style = 'display: flex; align-items: center; margin: 10px; background: rgba(0, 0, 0, 0.5); padding: 5px; border-radius: 5px;';
-
-    const sliderLabel = document.createElement('label');
-    sliderLabel.innerText = 'Xtra Volume:';
-    sliderLabel.style = 'margin-right: 10px; font-weight: bold; color: white;';
-
-    const volumeSlider = document.createElement('input');
-    volumeSlider.type = 'range';
-    volumeSlider.min = '0';
-    volumeSlider.max = '1000';
-    volumeSlider.value = video.volume * 10;
-    volumeSlider.style = 'width: 100px;';
-
-    volumeSlider.addEventListener('input', (event) => {
-        const volume = event.target.value / 100;
-        video.volume = Math.min(volume, 1);
-        if (gainNode) {
-            gainNode.gain.value = volume;
-        }
-    });
-
-    sliderContainer.appendChild(sliderLabel);
-    sliderContainer.appendChild(volumeSlider);
-
-    return sliderContainer;
-};
-
-// Function to set up the volume control
-const volumeSetUp = (video) => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const source = audioContext.createMediaElementSource(video);
-    gainNode = audioContext.createGain();
-    source.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    return gainNode;
-};
-
-const addVolumeControl = (video) => {
-    if (gainNode == null) {
-        volumeSetUp(video);
-        const existingSlider = document.querySelector('#custom-volume-slider');
-        if (!existingSlider) {
-            const slider = createVolumeSlider(video);
-            slider.id = 'custom-volume-slider';
-            slider.style.float = "right";
-            let controls = document.querySelector("#actions-inner>#menu>ytd-menu-renderer.style-scope.ytd-watch-metadata");
-            controls.parentElement.insertBefore(slider, controls);
-        }
-    }
-};
-
 
 
 function playVid(){
