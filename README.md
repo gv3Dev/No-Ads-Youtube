@@ -1,39 +1,49 @@
-# 🚫 No Ads YouTube - YouTube Ad Blocker
+# 🚫 No Ads YouTube - Ultimate YouTube Ad Blocker 🎵✨
 
-**No Ads YouTube** is a userscript designed to automatically skip all YouTube ads and remove annoying elements from the YouTube interface, ensuring an uninterrupted, ad-free viewing experience. 🎥✨
+> **Note:** If clicking on the video to pause isn't working, press the space bar to pause/play the video.
 
-## Features
+**No Ads YouTube** is a powerful userscript that offers a premium YouTube experience by automatically skipping all ads and removing unwanted elements from the interface. Enjoy YouTube and YouTube Music as if you had a paid subscription—ad-free and smooth! 🎬🔊
 
-- ⏩ Instantly skips video ads.
-- ❌ Removes overlay ads and other promotional elements.
-- 🔇 Mutes the video and speeds up playback during ads.
-- 📱 Works seamlessly on both desktop and mobile YouTube.
+## Key Features
 
-## Installation
+- **⏩ Instant Ad Skipping:** Automatically skips video ads for uninterrupted viewing.
+- **🚫 Ad Removal:** Eliminates overlay ads and promotional banners from your screen.
+- **🔇 Enhanced Playback:** Mutes videos and speeds up playback during ads for a smoother experience.
+- **📱 Cross-Platform Compatibility:** Works flawlessly on both desktop and mobile YouTube.
+- **🎶 Ad-Free YouTube Music:** Experience YouTube Music without interruptions, just like a premium subscription!
 
-### Step 1: Install Tampermonkey
+## Enjoy Your Ad-Free Experience
 
-To use this userscript, you need to install the Tampermonkey extension in your browser. Choose the appropriate link for your browser:
+With **No Ads YouTube**, you’ll have an uninterrupted, ad-free viewing experience that feels just like a premium service—at no cost! 🌟🚀
 
-- [Google Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) 🌐
-- [Mozilla Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/) 🦊
-- [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) 💻
-- [Safari](https://apps.apple.com/app/tampermonkey/id1482490089?mt=12) 🍎
-- [Opera](https://addons.opera.com/en/extensions/details/tampermonkey-beta/) 🌟
+## Installation Guide
 
-### Step 2: Install the Userscript
+Follow these steps to install **No Ads YouTube**:
 
-1. Once Tampermonkey is installed, click on its icon in the browser toolbar.
-2. Select **"Create a new script..."** from the menu.
-3. Delete the default code in the editor and replace it with the script provided above.
-4. Click **"File"** > **"Save"** to save the script.
+1. **Install Tampermonkey**:  
+   - **Chrome**: [Tampermonkey for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+   - **Firefox**: [Tampermonkey for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+   - **Safari**: [Tampermonkey for Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089)
+   - **Edge**: [Tampermonkey for Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/cfpjofooceeohoonpoipepighcaclehdf)
 
-### Step 3: Enjoy Ad-Free YouTube
+2. **Install the Script**:  
+   - Go to the **No Ads YouTube** script page: [No Ads YouTube Userscript](https://greasyfork.org/en/scripts/504197-no-ads-youtube-adblocker-ad-skipper-free-youtube-music-ad-remover-remove-adblock-warning)
+   - Click the "Install" button.
+   - Tampermonkey will prompt you to confirm the installation. Click "Install" again.
 
-With the script installed and active, all YouTube ads will be skipped automatically, and annoying elements will be removed from the interface. Enjoy your uninterrupted viewing! 🎉
+3. **Enable the Script**:  
+   - Open your browser's Tampermonkey dashboard.
+   - Make sure **No Ads YouTube** is listed as "Enabled".
+
+4. **Enjoy Ad-Free YouTube**:  
+   - Visit YouTube and enjoy an uninterrupted, ad-free experience.
 
 ## Troubleshooting
 
-- 🔄 Ensure that Tampermonkey is enabled in your browser extensions.
-- 📋 Make sure the script is installed and active in the Tampermonkey dashboard.
-- 🆙 If ads are still showing, try refreshing the YouTube page.
+- **🔄 Extension Check**: Ensure Tampermonkey is enabled in your browser extensions.
+- **📋 Script Status**: Verify that the script is installed and active in the Tampermonkey dashboard.
+- **🔄 Refresh Page**: If ads persist, try refreshing your YouTube page.
+
+---
+
+Transform your YouTube experience today with seamless, ad-free viewing and listening—just like a premium subscription! 🎉🎵
