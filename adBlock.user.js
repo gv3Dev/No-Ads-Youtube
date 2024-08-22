@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         No Ads - YouTube AdBlocker | Ad Skipper | Free YouTube Music | Ad Remover | Remove Adblock Warning
 // @namespace    http://tampermonkey.net/
-// @version      3.5
+// @version      3.6
 // @description  Skips all YouTube ads instantly and removes banners/overlays. Completely undetectable ad blocker. Enjoy ad-free YouTube music playlists and videos with no interruptions. Removes adblock detection warnings.
 // @author       gv3dev
 // @match        https://*.youtube.com/*
 // @icon         https://i.ibb.co/ZMwwmXm/Screenshot-2024-08-22-at-12-05-51-AM-removebg-preview.png
 // @grant        none
 // @license      MIT
-// @downloadURL  https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.user.js
-// @updateURL    https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.user.js
+// @updateURL https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.meta.js
 // ==/UserScript==
 
 
@@ -93,7 +93,6 @@ setInterval(() => {
         { selector: ".style-scope.ytd-companion-slot-renderer", action: 'remove' },
         { selector: "#masthead-ad", action: 'remove' },
         { selector: "ytd-ad-slot-renderer", action: 'remove' },
-        { selector: "ytd-popup-container", action: 'click' },
         { selector: "ytd-reel-shelf-renderer", action: 'remove' }
     ]);
 
