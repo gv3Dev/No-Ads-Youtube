@@ -1,42 +1,51 @@
 // ==UserScript==
-// @name         No ADS - YouTube
+// @name         No Ads - YouTube AdBlocker | Ad Skipper | Free YouTube Music | Ad Remover | Remove Adblock Warning
 // @namespace    http://tampermonkey.net/
-// @version      3.2
-// @description  - Skips all YouTube ads - | - undetectable - | - skips ads instantly - 
+// @version      3.4
+// @description  Skips all YouTube ads instantly and removes banners/overlays. Completely undetectable ad blocker. Enjoy ad-free YouTube music playlists and videos with no interruptions. Removes adblock detection warnings.
 // @author       gv3dev
 // @match        https://*.youtube.com/*
-// @icon         https://i.ibb.co/X5f50Cg/Screen-Shot-2021-07-19-at-9-31-54-PM.png
+// @icon         https://i.ibb.co/ZMwwmXm/Screenshot-2024-08-22-at-12-05-51-AM-removebg-preview.png
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
-let ogVolume = 1, pbRate = 1, cover = null, gainNode = null;
+let ogVolume = 1, pbRate = 1, manualPause = false;
 
 const manip = (actions) => {
     actions.forEach(({ selector, action, func }) => {
         let elements = document.querySelectorAll(selector);
         elements.forEach(element => {
-            if(element.style.display!=="none"){
-                if (action === 'remove') {
-                    element.remove();
-                } else if (action === 'hide') {
-                    element.style.display = "none";
-                } else if (action === 'click') {
-                    element.click();
-                } else if (action === 'remove-run') {
-                    element.remove();
-                    eval(func);
+            if(element!==null && element!==undefined){
+                if(element.style.display!=="none"){
+                    if (action === 'remove') {
+                        element.remove();
+                    } else if (action === 'hide') {
+                        element.style.display = "none";
+                    } else if (action === 'click') {
+                        element.click();
+                    } else if (action === 'remove-run') {
+                        element.remove();
+                        eval(func);
+                    }
                 }
             }
         });
     });
 };
 
-
-function playVid(){
-    document.querySelector("video").play();
+const playVid = () => {
+    const video = document.querySelector("video");
+    if(!video.playing && !manualPause){
+        video.play();
+    }
 }
 
-
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+    get: function(){
+        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+    }
+});
 
 setInterval(() => {
     if (location.href == "https://www.youtube.com/" || location.href == "https://m.youtube.com/") {
@@ -64,13 +73,9 @@ setInterval(() => {
     if (videoStream) {
         let ad = document.querySelector(".video-ads.ytp-ad-module");
         if (ad === undefined) {
-            if (cover !== null) {
-                cover.remove();
-            }
             pbRate = videoStream.playbackRate;
             videoStream.muted = false;
-        };
-
+        }
 
         let skipAdButton = document.querySelector(".ytp-skip-ad-button");
         if (skipAdButton !== null) {
@@ -80,9 +85,6 @@ setInterval(() => {
         if (ad !== null && ad.children.length > 0) {
             let previewText = document.querySelector(".ytp-ad-text[class*='ytp-ad-preview-text']");
             if (previewText !== undefined) {
-                let vid = document.querySelector("video");
-                let w = vid.clientWidth;
-                let h = vid.clientHeight;
                 videoStream.playbackRate = 16;
                 videoStream.currentTime += videoStream.duration;
                 videoStream.muted = true;
@@ -90,3 +92,18 @@ setInterval(() => {
         }
     }
 }, 10);
+
+
+document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+        manualPause = true;
+    }
+});
+
+document.addEventListener('play', () => {
+    manualPause = false;
+});
+
+document.addEventListener('pause', () => {
+    manualPause = true;
+});
