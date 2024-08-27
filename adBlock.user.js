@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         No Ads - YouTube AdBlocker | Ad Skipper | Free YouTube Music | Ad Remover | Remove Adblock Warning
 // @namespace    http://tampermonkey.net/
-// @version      3.6
+// @version      3.7
 // @description  Skips all YouTube ads instantly and removes banners/overlays. Completely undetectable ad blocker. Enjoy ad-free YouTube music playlists and videos with no interruptions. Removes adblock detection warnings.
 // @author       gv3dev
 // @match        https://*.youtube.com/*
@@ -9,7 +9,7 @@
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.user.js
-// @updateURL https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.meta.js
+// @updateURL   https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.meta.js
 // ==/UserScript==
 
 
@@ -107,6 +107,9 @@ setInterval(() => {
         let skipAdButton = document.querySelector(".ytp-skip-ad-button");
         if (skipAdButton !== null) {
             skipAdButton.click();
+            videoStream.playbackRate = 16;
+            videoStream.currentTime += videoStream.duration;
+            videoStream.muted = true;
         }
 
         if (ad !== null && ad.children.length > 0) {
