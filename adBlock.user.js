@@ -79,46 +79,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 });
 
 
-    function nativeTouch(){
-        // 创建 Touch 对象
-        let touch = new Touch({
-            identifier: Date.now(),
-            target: this,
-            clientX: 12,
-            clientY: 34,
-            radiusX: 56,
-            radiusY: 78,
-            rotationAngle: 0,
-            force: 1
-        });
- 
-        // 创建 TouchEvent 对象
-        let touchStartEvent = new TouchEvent(`touchstart`, {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-            touches: [touch],
-            targetTouches: [touch],
-            changedTouches: [touch]
-        });
- 
-        // 分派 touchstart 事件到目标元素
-        this.dispatchEvent(touchStartEvent);
- 
-        // 创建 TouchEvent 对象
-        let touchEndEvent = new TouchEvent(`touchend`, {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-            touches: [],
-            targetTouches: [],
-            changedTouches: [touch]
-        });
- 
-        // 分派 touchend 事件到目标元素
-        this.dispatchEvent(touchEndEvent);
-    }
-
+    
 const removeShorts = () => {
     if(should_Remove_Shorts == true){
         document.querySelectorAll(".style-scope.ytd-rich-shelf-renderer #title-container").forEach((shelf) => {
