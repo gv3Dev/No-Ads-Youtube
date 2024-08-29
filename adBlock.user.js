@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         No Ads - YouTube AdBlocker | Ad Skipper | Free YouTube Music | Ad Remover | Remove Adblock Warning
 // @namespace    http://tampermonkey.net/
-// @version      3.8
+// @version      3.9
 // @description  Skips all YouTube ads instantly and removes banners/overlays. Completely undetectable ad blocker. Enjoy ad-free YouTube music playlists and videos with no interruptions. Removes adblock detection warnings.
 // @description:de Überspringt alle YouTube-Werbung sofort und entfernt Banner/Overlays. Völlig unentdeckbarer Werbeblocker. Genießen Sie werbefreie YouTube-Musik-Playlists und Videos ohne Unterbrechungen. Entfernt Adblock-Erkennungswarnungen.
 // @description:es Omite todos los anuncios de YouTube al instante y elimina banners/superposiciones. Bloqueador de anuncios completamente indetectable. Disfruta de listas de reproducción y videos de música de YouTube sin interrupciones. Elimina las advertencias de detección de Adblock.
@@ -14,20 +14,17 @@
 // @description:ko 모든 YouTube 광고를 즉시 건너뛰고 배너/오버레이를 제거합니다. 완전히 탐지되지 않는 광고 차단기. 광고 없이 중단 없는 YouTube 음악 재생목록과 동영상을 즐기십시오. Adblock 감지 경고를 제거합니다.
 // @description:hi सभी YouTube विज्ञापनों को तुरंत स्किप करें और बैनर/ओवरले हटा दें। पूरी तरह से अदृश्य विज्ञापन ब्लॉकर। बिना किसी रुकावट के विज्ञापन-मुक्त YouTube संगीत प्लेलिस्ट और वीडियो का आनंद लें। Adblock पहचान चेतावनियों को हटा देता है।
 // @match        https://*.youtube.com/*
+// @match        https://www.youtube-nocookie.com/*
 // @icon         https://i.ibb.co/ZMwwmXm/Screenshot-2024-08-22-at-12-05-51-AM-removebg-preview.png
 // @grant        none
 // @license      MIT
-// @downloadURL  https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.user.js
-// @updateURL    https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.user.js
+// @updateURL https://update.greasyfork.org/scripts/504197/No%20Ads%20-%20YouTube%20AdBlocker%20%7C%20Ad%20Skipper%20%7C%20Free%20YouTube%20Music%20%7C%20Ad%20Remover%20%7C%20Remove%20Adblock%20Warning.meta.js
 // ==/UserScript==
 
 
 
-let ogVolume = 1, pbRate = 1, manualPause = false; // don't touch, only touch the line below [ if i add more features i'll make a GUI ;) ]
-
-
-const should_Remove_Shorts = true // replace with false then save to allow shorts
-
+let ogVolume = 1, pbRate = 1, manualPause = false;
 
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
@@ -67,7 +64,7 @@ const manip = (actions) => {
 
 const playVid = () => {
     const video = document.querySelector("video");
-    if(!video.playing && !manualPause){
+    if(!video.playing && !manualPause && video.currentTime<1){
         video.play();
     }
 }
@@ -79,8 +76,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 });
 
 
-    
-const removeShorts = () => {
+/*const removeShorts = () => {
     if(should_Remove_Shorts == true){
         document.querySelectorAll(".style-scope.ytd-rich-shelf-renderer #title-container").forEach((shelf) => {
             if (shelf.innerText === "Shorts") {
@@ -88,14 +84,80 @@ const removeShorts = () => {
             }
         });
     }
-};
+};*/
 
-const styles = `
+
+const simulateClick = (element)=>{
+    const mouseDownEvent = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: element.getBoundingClientRect().left,
+        clientY: element.getBoundingClientRect().top,
+        button: 0
+    });
+
+    element.dispatchEvent(mouseDownEvent);
+
+    const mouseUpEvent = new MouseEvent('mouseup', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: element.getBoundingClientRect().left,
+        clientY: element.getBoundingClientRect().top,
+        button: 0
+    });
+    element.dispatchEvent(mouseUpEvent);
+    const clickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: element.getBoundingClientRect().left,
+        clientY: element.getBoundingClientRect().top,
+        button: 0
+    });
+    element.dispatchEvent(clickEvent);
+}
+
+const simulateNativeTouch = ()=>{
+    const touchPoint = new Touch({
+        identifier: Date.now(),
+        target: this,
+        clientX: 12,
+        clientY: 34,
+        radiusX: 56,
+        radiusY: 78,
+        rotationAngle: 0,
+        force: 1
+    });
+    const touchStart = new TouchEvent('touchstart', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        touches: [touchPoint],
+        targetTouches: [touchPoint],
+        changedTouches: [touchPoint]
+    });
+    this.dispatchEvent(touchStart);
+    const touchEnd = new TouchEvent('touchend', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        touches: [],
+        targetTouches: [],
+        changedTouches: [touchPoint]
+    });
+    this.dispatchEvent(touchEnd);
+}
+
+
+
+const rev = `
+    ytd-rich-item-renderer:has(ytd-ad-slot-renderer),
     #player-ads,
-    #masthead-ad,
     #panels:has(ytd-ads-engagement-panel-content-renderer),
     ytd-ad-slot-renderer,
-    ytd-rich-item-renderer:has(ytd-ad-slot-renderer),
+    #masthead-ad,
     ytd-reel-video-renderer:has(ytd-ad-slot-renderer),
     tp-yt-paper-dialog:has(#feedback.ytd-enforcement-message-view-model),
     .yt-mealbar-promo-renderer {
@@ -108,58 +170,66 @@ const styles = `
 
 const styleSheet = document.createElement('style');
 styleSheet.type = 'text/css';
-styleSheet.innerText = styles;
+styleSheet.innerText = rev;
 document.head.appendChild(styleSheet);
 
 setInterval(() => {
 
-    removeShorts();
+    try{
 
-    manip([
-        { selector: "tp-yt-paper-dialog:has(#feedback.ytd-enforcement-message-view-model)", action: 'remove-run', func: playVid},
-        { selector: ".ytp-ad-overlay-close-button", action: 'click' },
-        { selector: ".style-scope.ytd-watch-next-secondary-results-renderer.sparkles-light-cta.GoogleActiveViewElement", action: 'hide' },
-        { selector: ".style-scope.ytd-item-section-renderer.sparkles-light-cta", action: 'hide' },
-        { selector: ".ytp-ad-message-container", action: 'hide' },
-        { selector: ".style-scope.ytd-companion-slot-renderer", action: 'remove' },
-        { selector: "#masthead-ad", action: 'remove' },
-        { selector: "ytd-ad-slot-renderer", action: 'remove' },
-        { selector: "ytd-reel-shelf-renderer", action: 'remove' },
-        { selector: "ytd-player-legacy-desktop-watch-ads-renderer", action: 'hide'},
-        { selector: ".ytp-ad-player-overlay-layout", action: 'hide' },
-        { selector: "ytd-reel-video-renderer:has(.ytd-ad-slot-renderer)", action: "remove"},
-        { selector: "ytd-in-feed-ad-layout-renderer", action: 'remove' }
-    ]);
+        manip([
+            { selector: "tp-yt-paper-dialog:has(#feedback.ytd-enforcement-message-view-model)", action: 'remove-run', func: playVid()},
+            { selector: ".ytp-ad-overlay-close-button", action: 'click' },
+            { selector: ".style-scope.ytd-watch-next-secondary-results-renderer.sparkles-light-cta.GoogleActiveViewElement", action: 'hide' },
+            { selector: ".style-scope.ytd-item-section-renderer.sparkles-light-cta", action: 'hide' },
+            { selector: ".ytp-ad-message-container", action: 'hide' },
+            { selector: ".style-scope.ytd-companion-slot-renderer", action: 'remove' },
+            { selector: "#masthead-ad", action: 'remove' },
+            { selector: "ytd-ad-slot-renderer", action: 'remove' },
+            { selector: "ytd-reel-shelf-renderer", action: 'remove' },
+            { selector: "ytd-player-legacy-desktop-watch-ads-renderer", action: 'hide'},
+            { selector: ".ytp-ad-player-overlay-layout", action: 'hide' },
+            { selector: "ytd-reel-video-renderer:has(.ytd-ad-slot-renderer)", action: "remove"},
+            { selector: "ytd-in-feed-ad-layout-renderer", action: 'remove' },
+            { selector: "ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads']", action: 'hide' },
+            { selector: "ytd-popup-container:has(a[href='/premium'])", action: 'hide' },
+            { selector: "yt-mealbar-promo-renderer", action: 'hide' }
+        ]);
 
-    let videoStream = document.querySelector(".video-stream.html5-main-video"),
-        skipAdButton = document.querySelector(`.ytp-skip-ad-button,.ytp-ad-skip-button,.ytp-ad-skip-button-modern`)
-    if (skipAdButton !== null) {
-        skipAdButton.click();
-        skipAdButton.remove()
-        if(videoStream){
-            videoStream.playbackRate = 16;
-            videoStream.currentTime += videoStream.duration;
-            videoStream.muted = true;
-        }
-    }
+        let videoStream = document.querySelector(".video-stream.html5-main-video"),
+            skipAdButton = document.querySelector(`.ytp-skip-ad-button,.ytp-ad-skip-button,.ytp-ad-skip-button-modern`);
 
-    if (videoStream) {
-        let ad = document.querySelector(".video-ads.ytp-ad-module").firstChild;
-        if (ad === null) {
-            pbRate = videoStream.playbackRate;
-            videoStream.muted = false;
-        }
-
-
-        if (ad !== null && ad.children.length > 0) {
-            let previewText = document.querySelector(".ytp-ad-text[class*='ytp-ad-preview-text']");
-            if (previewText !== undefined) {
+        if (skipAdButton !== null) {
+            simulateClick(skipAdButton);
+            skipAdButton.click();
+            simulateNativeTouch.call(skipAdButton);
+            //skipAdButton.remove()
+            if(videoStream){
                 videoStream.playbackRate = 16;
                 videoStream.currentTime += videoStream.duration;
                 videoStream.muted = true;
             }
         }
-    }
+
+        if (videoStream) {
+            let ad = document.querySelector(".video-ads.ytp-ad-module").firstChild;
+            if (ad === null) {
+                pbRate = videoStream.playbackRate;
+                videoStream.muted = false;
+            }
+
+
+            if (ad !== null && ad.children.length > 0) {
+                let previewText = document.querySelector(".ytp-ad-text[class*='ytp-ad-preview-text']");
+                if (previewText !== undefined) {
+                    videoStream.playbackRate = 16;
+                    videoStream.currentTime += videoStream.duration;
+                    videoStream.muted = true;
+                }
+            }
+        }
+    }catch(e){}
+
 }, 10);
 
 
