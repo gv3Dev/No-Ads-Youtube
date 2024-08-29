@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         No Ads - YouTube AdBlocker | Ad Skipper | Free YouTube Music | Ad Remover | Remove Adblock Warning
 // @namespace    http://tampermonkey.net/
-// @version      3.9
+// @version      3.95
 // @description  Skips all YouTube ads instantly and removes banners/overlays. Completely undetectable ad blocker. Enjoy ad-free YouTube music playlists and videos with no interruptions. Removes adblock detection warnings.
 // @description:de Überspringt alle YouTube-Werbung sofort und entfernt Banner/Overlays. Völlig unentdeckbarer Werbeblocker. Genießen Sie werbefreie YouTube-Musik-Playlists und Videos ohne Unterbrechungen. Entfernt Adblock-Erkennungswarnungen.
 // @description:es Omite todos los anuncios de YouTube al instante y elimina banners/superposiciones. Bloqueador de anuncios completamente indetectable. Disfruta de listas de reproducción y videos de música de YouTube sin interrupciones. Elimina las advertencias de detección de Adblock.
@@ -64,8 +64,10 @@ const manip = (actions) => {
 
 const playVid = () => {
     const video = document.querySelector("video");
-    if(!video.playing && !manualPause && video.currentTime<1){
-        video.play();
+    if(video!==null){
+        if(!video.playing && !manualPause && video.currentTime<1){
+            video.play();
+        }
     }
 }
 
@@ -88,68 +90,73 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 
 
 const simulateClick = (element)=>{
-    const mouseDownEvent = new MouseEvent('mousedown', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        clientX: element.getBoundingClientRect().left,
-        clientY: element.getBoundingClientRect().top,
-        button: 0
-    });
+    try{
+        const mouseDownEvent = new MouseEvent('mousedown', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            clientX: element.getBoundingClientRect().left,
+            clientY: element.getBoundingClientRect().top,
+            button: 0
+        });
 
-    element.dispatchEvent(mouseDownEvent);
+        element.dispatchEvent(mouseDownEvent);
 
-    const mouseUpEvent = new MouseEvent('mouseup', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        clientX: element.getBoundingClientRect().left,
-        clientY: element.getBoundingClientRect().top,
-        button: 0
-    });
-    element.dispatchEvent(mouseUpEvent);
-    const clickEvent = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        clientX: element.getBoundingClientRect().left,
-        clientY: element.getBoundingClientRect().top,
-        button: 0
-    });
-    element.dispatchEvent(clickEvent);
+        const mouseUpEvent = new MouseEvent('mouseup', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            clientX: element.getBoundingClientRect().left,
+            clientY: element.getBoundingClientRect().top,
+            button: 0
+        });
+        element.dispatchEvent(mouseUpEvent);
+        const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            clientX: element.getBoundingClientRect().left,
+            clientY: element.getBoundingClientRect().top,
+            button: 0
+        });
+        element.dispatchEvent(clickEvent);
+    }catch(e){}
 }
 
-const simulateNativeTouch = ()=>{
-    const touchPoint = new Touch({
-        identifier: Date.now(),
-        target: this,
-        clientX: 12,
-        clientY: 34,
-        radiusX: 56,
-        radiusY: 78,
-        rotationAngle: 0,
-        force: 1
-    });
-    const touchStart = new TouchEvent('touchstart', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        touches: [touchPoint],
-        targetTouches: [touchPoint],
-        changedTouches: [touchPoint]
-    });
-    this.dispatchEvent(touchStart);
-    const touchEnd = new TouchEvent('touchend', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        touches: [],
-        targetTouches: [],
-        changedTouches: [touchPoint]
-    });
-    this.dispatchEvent(touchEnd);
-}
+const simulateNativeTouch = (element) => {
+    try{
+        const touchPoint = new Touch({
+            identifier: Date.now(),
+            target: element,
+            clientX: 12,
+            clientY: 34,
+            radiusX: 56,
+            radiusY: 78,
+            rotationAngle: 0,
+            force: 1
+        });
 
+        const touchStart = new TouchEvent('touchstart', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            touches: [touchPoint],
+            targetTouches: [touchPoint],
+            changedTouches: [touchPoint]
+        });
+        element.dispatchEvent(touchStart);
+
+        const touchEnd = new TouchEvent('touchend', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            touches: [],
+            targetTouches: [],
+            changedTouches: [touchPoint]
+        });
+        element.dispatchEvent(touchEnd);
+    }catch(e){}
+};
 
 
 const rev = `
@@ -174,7 +181,6 @@ styleSheet.innerText = rev;
 document.head.appendChild(styleSheet);
 
 setInterval(() => {
-
     try{
 
         manip([
@@ -196,38 +202,43 @@ setInterval(() => {
             { selector: "yt-mealbar-promo-renderer", action: 'hide' }
         ]);
 
-        let videoStream = document.querySelector(".video-stream.html5-main-video"),
+        let videoStream = document.querySelector("video"),
             skipAdButton = document.querySelector(`.ytp-skip-ad-button,.ytp-ad-skip-button,.ytp-ad-skip-button-modern`);
 
-        if (skipAdButton !== null) {
-            simulateClick(skipAdButton);
-            skipAdButton.click();
-            simulateNativeTouch.call(skipAdButton);
-            //skipAdButton.remove()
-            if(videoStream){
-                videoStream.playbackRate = 16;
-                videoStream.currentTime += videoStream.duration;
-                videoStream.muted = true;
-            }
-        }
 
         if (videoStream) {
-            let ad = document.querySelector(".video-ads.ytp-ad-module").firstChild;
-            if (ad === null) {
+
+            let ad = document.querySelector(".video-ads.ytp-ad-module").firstChild || document.querySelector(".ytp-exp-ppp-update.ad-created.ad-showing.ad-interrupting");
+            if (ad !== null) {
+                //console.log("ad not null")
+                //console.log(ad);
+                if(ad.childElementCount > 0){
+                    //console.log("ad children higher than 0")
+                    //console.log("skipping with speed")
+                    videoStream.playbackRate = 16;
+                    if (!isNaN(videoStream.duration) && isFinite(videoStream.duration) &&
+                        !isNaN(videoStream.currentTime) && isFinite(videoStream.currentTime)) {
+                        videoStream.currentTime += videoStream.duration;
+                    }
+                    videoStream.muted = true;
+                }
+                else{
+                    pbRate = videoStream.playbackRate;
+                    videoStream.muted = false;
+                }
+            }else{
                 pbRate = videoStream.playbackRate;
                 videoStream.muted = false;
             }
-
-
-            if (ad !== null && ad.children.length > 0) {
-                let previewText = document.querySelector(".ytp-ad-text[class*='ytp-ad-preview-text']");
-                if (previewText !== undefined) {
-                    videoStream.playbackRate = 16;
-                    videoStream.currentTime += videoStream.duration;
-                    videoStream.muted = true;
-                }
-            }
         }
+
+        if (skipAdButton !== null) {
+            skipAdButton.click();
+            simulateClick(skipAdButton);
+            simulateNativeTouch(skipAdButton);
+            console.log("skipAd button clicked.");
+        }
+
     }catch(e){}
 
 }, 10);
